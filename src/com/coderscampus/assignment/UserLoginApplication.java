@@ -7,40 +7,36 @@ public class UserLoginApplication {
 
     public static void main(String[] args) throws IOException {
         User[] users;
-        String[] userInput = new String[]{};
+        String[] userInput;
         int numberOfPrompts = 0;
-        boolean validUser = false;
+        int validUserIndex = -1;
         String fileName = "./data.txt";
         users = UserService.getUsersInformation(fileName);
 
-        while ((!validUser) && (numberOfPrompts < 5)) {
+        while ((validUserIndex < 0) && (numberOfPrompts < 5)) {
             userInput = getUsernamePassword();
-            validUser = isUserValid(userInput, users);
+            validUserIndex = isUserValid(userInput, users);
             numberOfPrompts++;
-            if ((!validUser) && (numberOfPrompts < 4)) {
+            if ((validUserIndex < 0) && (numberOfPrompts < 4)) {
                 System.out.println("Invalid username/password.");
             }
         }
-        if (validUser) {
-            welcomeUser(userInput, users);
+        if (validUserIndex > 0) {
+            System.out.println("Welcome "+ users[validUserIndex].getName() + "!");
         } else {
             System.out.println("Too many failed login attempts, you are now locked out.");
         }
 
     }
 
-    private static void welcomeUser(String[] userInput, User[] users) {
-        System.out.println("Welcome!");
-    }
+    private static int isUserValid(String[] userInput, User[] users) {
 
-    private static boolean isUserValid(String[] userInput, User[] users) {
-
-        for (User user : users) {
-            if (!(user == null)) {
-                if ((userInput[0].equals(user.getUsername())) && (userInput[1].equals(user.getPassword()))) return true;
+        for (int i = 0; i < users.length; i++) {
+            if (!(users[i] == null)) {
+                if ((userInput[0].equals(users[i].getUsername())) && (userInput[1].equals(users[i].getPassword()))) return i;
             }
         }
-        return false;
+        return -1;
         }
 
         private static String[] getUsernamePassword () {
