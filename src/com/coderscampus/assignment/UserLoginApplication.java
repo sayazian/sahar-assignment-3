@@ -17,6 +17,9 @@ public class UserLoginApplication {
             userInput = getUsernamePassword();
             validUser = isUserValid(userInput, users);
             numberOfPrompts++;
+            if ((!validUser) && (numberOfPrompts < 4)) {
+                System.out.println("Invalid username/password.");
+            }
         }
         if (validUser) {
             welcomeUser(userInput, users);
@@ -33,18 +36,20 @@ public class UserLoginApplication {
     private static boolean isUserValid(String[] userInput, User[] users) {
 
         for (User user : users) {
-            if ((userInput[0].equals(user.getUsername())) && (userInput[1].equals(user.getPassword()))) return true;
+            if (!(user == null)) {
+                if ((userInput[0].equals(user.getUsername())) && (userInput[1].equals(user.getPassword()))) return true;
+            }
         }
         return false;
-    }
+        }
 
-    private static String[] getUsernamePassword() {
-        String[] userInput = new String[2];
-        Scanner input = new Scanner(System.in);
-        System.out.println("Enter your email:");
-        userInput[0] = input.nextLine();
-        System.out.println("Enter your password:");
-        userInput[1] = input.nextLine();
-        return userInput;
+        private static String[] getUsernamePassword () {
+            String[] userInput = new String[2];
+            Scanner input = new Scanner(System.in);
+            System.out.println("Enter your email:");
+            userInput[0] = input.nextLine();
+            System.out.println("Enter your password:");
+            userInput[1] = input.nextLine();
+            return userInput;
+        }
     }
-}
