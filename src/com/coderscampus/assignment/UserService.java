@@ -6,7 +6,13 @@ import java.io.IOException;
 
 public class UserService {
 
-    public static User createUser(String[] stringInput) {
+    final User[] users = new User[10];
+
+    public String getUserName(int index) {
+        return users[index].getName();
+    }
+
+    public User createUser(String[] stringInput) {
         User user = new User();
         user.setUsername(stringInput[0]);
         user.setPassword(stringInput[1]);
@@ -14,12 +20,7 @@ public class UserService {
         return user;
     }
 
-    public static String[] parseText(String input) {
-        return input.split(",");
-    }
-
-    public static User[] getUsersInformation(String fileName) throws IOException {
-        User[] users = new User[10];
+    public void loadUsersInformation(String fileName) throws IOException {
         FileReader fileReader = new FileReader(fileName);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
@@ -28,10 +29,23 @@ public class UserService {
         while ((line = bufferedReader.readLine()) != null) {
             String[] userInfo = parseText(line);
             users[counter] = createUser(userInfo);
-            System.out.println(users[counter].toString());
             counter++;
         }
-        return users;
+    }
+
+    private static String[] parseText(String input) {
+        return input.split(",");
+    }
+
+    public int isUserValid(String[] userInput) {
+
+        for (int i = 0; i < users.length; i++) {
+            if (!(users[i] == null)) {
+                if ((userInput[0].equals(users[i].getUsername())) && (userInput[1].equals(users[i].getPassword())))
+                    return i;
+            }
+        }
+        return -1;
     }
 
 }
